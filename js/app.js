@@ -6,7 +6,6 @@ var initialLocations = [{locationName: 'bowring institue, bangalore'},
 						{locationName: 'hard rock cafe, bangalore'},
 						{locationName: 'high court of karnataka, bangalore'},
 						{locationName: 'm chinnaswamy stadium, bangalore'}];
-
 var markers = [];
 
 function initMap() {
@@ -38,7 +37,6 @@ function initMap() {
       	});
 
       	markers.push(marker);
-
       	var infoWindow = new google.maps.InfoWindow({
         	content: name
       	});
@@ -73,7 +71,9 @@ function initMap() {
       	// function with the search results after each search.
       	service.textSearch(request, function(results, status) {
 	        if (status == google.maps.places.PlacesServiceStatus.OK) {
-	            setGoogleData(results[0]);
+	        	if(typeof setGoogleData === "function") {
+	            	setGoogleData(results[0]);
+	        	}
 	        }
       	});
     };
@@ -114,7 +114,7 @@ var ViewModel = function(mapView){
 
   	this.showLocation = function(clickedLocation) {
   		self.clearMarkers();
-  		clickedLocation.marker.setMap(map);
+  		mapView.createMapMarker(clickedLocation.placeServiceData);
   	};
 
   	this.clearMarkers = function(){
@@ -126,6 +126,14 @@ var ViewModel = function(mapView){
 	      markers[i].setMap(map);
 	    }
   	};
+
+  	this.onClick = function(clickedLocation){
+  		clickedLocation.marker.setAnimation(google.maps.Animation.BOUNCE);
+  		// infoWindow.open(map, marker);
+	   //      setTimeout(function() {
+	   //      	marker.setAnimation(null)
+	   //  }, 1000);
+  	}
 };
 
 function startApp(){
