@@ -1,0 +1,120 @@
+html, body {
+	height: 100%;
+}
+
+body{
+	overflow: hidden;
+}
+
+#map-canvas {
+	position: absolute;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	z-index: 0;
+}
+
+/*.location-search {
+	right: 0;
+}*/
+#searchbox {
+	position: relative;
+	float: right;
+	z-index: 1;
+    background-color: #045aa9;
+    border-radius: 35px;    
+    border-width: 1px;
+    border-style: solid;
+    border-color: #c4d9df #a4c3ca #83afb7;
+    width: 350px;
+    height: 35px;
+    padding: 5px;
+    margin: 30px auto 10px;
+    opacity: 0.9;
+    overflow: hidden;  /*Clear floats */
+}
+
+#search,
+#submit {
+	float: left;
+}
+
+#search {
+	padding: 5px 9px;
+	height: 23px;
+	width: 230px;
+	border: 1px solid #a4c3ca;
+	font: normal 13px 'trebuchet MS', arial, helvetica;
+	background: #f1f1f1;
+	border-radius: 50px 3px 3px 50px;
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25) inset, 0 1px 0 rgba(255, 255, 255, 1);
+}
+
+#submit
+{       
+    background-color: #6cbb6b;
+    background-image: linear-gradient(#95d788, #6cbb6b);
+    border-radius: 3px 50px 50px 3px;    
+    border-width: 1px;
+    border-style: solid;
+    border-color: #7eba7c #578e57 #447d43;
+    box-shadow: 0 0 1px rgba(0, 0, 0, 0.3), 
+                0 1px 0 rgba(255, 255, 255, 0.3) inset;
+    height: 35px;
+    margin: 0 0 0 10px;
+    padding: 0;
+    width: 90px;
+    cursor: pointer;
+    font: bold 14px Arial, Helvetica;
+    color: #23441e;    
+    text-shadow: 0 1px 0 rgba(255,255,255,0.5);
+}
+
+#submit:hover {       
+    background-color: #95d788;
+    background-image: linear-gradient(#6cbb6b, #95d788);
+}
+.location-list {
+	width: 100%;
+	height: 100%;
+}
+#locations {
+	position: absolute;
+	float: right;
+	right: 0;
+	width: 350px;
+	height: 400px;
+	background-color: #eaf8fc;
+    background-image: linear-gradient(#fff, #d4e8ec);
+	border-width: 1px;
+	border-style: solid;
+	border-color: #c4d9df #a4c3ca #83afb7;
+	margin-top: 90px;
+	margin-right: 5px;
+	padding-right: 10px;
+	opacity: 0.9;
+	overflow-y: scroll;
+	overflow-x: hidden;
+}
+
+.loc {
+	width: 340px;
+	height: 30px;
+	padding: 5px;
+}
+@media (max-width: 330px) {
+	#searchbox {
+		width: 100%;
+		float: none;
+	}
+	#search {
+		width: 180px;
+	}
+}
+
+@media (max-width: 450px){
+	#locations {
+		display: none;
+	}
+}
