@@ -1,11 +1,13 @@
 'use strict';
 var map;
-var initialLocations = [{locationName: 'hard rock cafe, bangalore'},
+var initialLocations = [{locationName: 'bowring institue, bangalore'},
 						{locationName: 'Church street Social, bangalore'},
 						{locationName: 'chutney chang, museum road, bangalore'},
-						{locationName: 'bowring institue, bangalore'},
-						{locationName: 'm chinnaswamy stadium, bangalore'},
-						{locationName: 'high court of karnataka, bangalore'}];
+						{locationName: 'hard rock cafe, bangalore'},
+						{locationName: 'high court of karnataka, bangalore'},
+						{locationName: 'm chinnaswamy stadium, bangalore'}];
+
+var markers = [];
 
 function initMap() {
 	var self = this;
@@ -34,6 +36,8 @@ function initMap() {
 	        title: name,
 	        animation: google.maps.Animation.DROP,
       	});
+
+      	markers.push(marker);
 
       	var infoWindow = new google.maps.InfoWindow({
         	content: name
@@ -98,6 +102,7 @@ var ViewModel = function(mapView){
 
     	var setMarkerData = function(data){
     		place.marker = data;
+    		console.log(place.marker);
     	};
 
     	mapView.googlePlaceSearch(place, setGoogleData);
@@ -106,6 +111,21 @@ var ViewModel = function(mapView){
     this.allLocations.forEach(function(place) {
     	self.visibleLocations.push(place);
   	});
+
+  	this.showLocation = function(clickedLocation) {
+  		self.clearMarkers();
+  		clickedLocation.marker.setMap(map);
+  	};
+
+  	this.clearMarkers = function(){
+    	self.setMapOnAll(null);
+  	};
+
+  	this.setMapOnAll = function(map) {
+	    for (var i = 0; i < markers.length; i++) {
+	      markers[i].setMap(map);
+	    }
+  	};
 };
 
 function startApp(){
