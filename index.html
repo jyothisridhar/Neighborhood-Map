@@ -9,7 +9,7 @@
 		<div id="map-canvas"></div>
 		<div class="location-search">
 			<form id="searchbox">
-				<input id="search" type="text" placeholder="Search location">
+				<input id="search" type="text" data-bind="textInput: userInput, event: {keyup: filterMarkers}" placeholder="Search location">
 				<input id="submit" type="submit" value="Search">
 			</form>			
 		</div>

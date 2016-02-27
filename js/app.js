@@ -12,26 +12,30 @@ var Place = function(placeObj){
 	this.locationName = placeObj.locationName;
 	this.placeServiceData = null;
 	this.marker = null;
+	this.infoWindow = null;
 };
 
 var ViewModel = function(mapView){
 	var self = this;
 	this.allLocations = [];
 	this.visibleLocations = ko.observableArray();
+	this.userInput = ko.observable('');
 
 	initialLocations.forEach(function(place) {
     	self.allLocations.push(new Place(place));
     });
 
+    //get marker and infowindow data from map view
     this.allLocations.forEach(function(place) {
     	var setGoogleData = function(data) {
     		place.placeServiceData = data;
     		mapView.createMapMarker(place.placeServiceData, setMarkerData);
     	};
 
-    	var setMarkerData = function(data){
-    		place.marker = data;
-    		console.log(place.marker);
+    	var setMarkerData = function(mData, infoData){
+    		place.marker = mData;
+    		place.infoWindow = infoData;
+    		console.log("marker: ",place.marker, "info:", place.infoWindow);
     	};
 
     	mapView.googlePlaceSearch(place, setGoogleData);
@@ -41,26 +45,46 @@ var ViewModel = function(mapView){
     	self.visibleLocations.push(place);
   	});
 
-  	this.setMapOnAll = function(map) {
-	    for (var i = 0; i < markers.length; i++) {
-	      markers[i].setMap(map);
-	    }
+  	//search for locations from the list
+  	this.filterMarkers = function(){
+  		var searchInput = self.userInput().toLowerCase();
+  		self.visibleLocations.removeAll();
+
+  		self.allLocations.forEach(function(place) {
+  			place.marker.setVisible(false);
+
+  			if(place.locationName.toLowerCase().indexOf(searchInput) !== -1){
+  				self.visibleLocations.push(place);
+  			}
+  		});
+  		
+  		self.visibleLocations().forEach(function(place) {
+  			place.marker.setVisible(true);
+  		});
   	};
 
-  	this.clearMarkers = function(){
-    	self.setMapOnAll(null);
-  	};
+  	// this.setMapOnAll = function(map) {
+	  //   for (var i = 0; i < markers.length; i++) {
+	  //     markers[i].setMap(map);
+	  //   }
+  	// };
+
+  	// this.clearMarkers = function(){
+   //  	self.setMapOnAll(null);
+  	// };
 
   	this.animateMarker = function(clickedLocation){
   		clickedLocation.marker.setAnimation(google.maps.Animation.BOUNCE);
 	    setTimeout(function() {
-	      	marker.setAnimation(null)
+	      	clickedLocation.marker.setAnimation(null);
 	    }, 1000);
   	};
 
   	this.showLocation = function(clickedLocation) {
-  		self.clearMarkers();
-  		mapView.createMapMarker(clickedLocation.placeServiceData);
+  		//self.clearMarkers();
+  		//mapView.createMapMarker(clickedLocation.placeServiceData);
+  		clickedLocation.infoWindow.setContent(clickedLocation.locationName);
+  		clickedLocation.infoWindow.open(map, clickedLocation.marker);
   		self.animateMarker(clickedLocation);
   	};
 };

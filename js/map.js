@@ -42,7 +42,7 @@ function initMap() {
         });
 
         if(typeof setMarkerData === "function") {
-        		setMarkerData(marker);
+        		setMarkerData(marker, infoWindow);
         }
         
         bounds.extend(marker.position);
