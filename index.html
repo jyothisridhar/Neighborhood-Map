@@ -9,15 +9,13 @@
 		<div id="map-canvas"></div>
 		<div class="location-search">
 			<form id="searchbox" data-bind="submit: searchLocation">
-				<input id="search" type="text" data-bind="textInput: userInput, event: {keyup: filterMarkers}" placeholder="Search location">
+				<input id="search" type="text" data-bind="textInput: userInput, event: {keyup: filterMarkers}, value: searchText" placeholder="Search location">
 				<input id="submit" type="submit" value="Search">
 			</form>			
 		</div>
 		<div class="location-list">
 			<div id="locations" data-bind="foreach: visibleLocations">
-				<div class="loc" data-bind="click: $parent.showLocation">
-					<p data-bind="text: locationName"></p>
-				</div>
+				<p class="loc" data-bind="text: locationName, click: $parent.showLocation"></p>
 				<hr>
 			</div>
 		</div>
