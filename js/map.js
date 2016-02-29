@@ -4,7 +4,7 @@ function initMap() {
 
 	  map = new google.maps.Map(document.getElementById('map-canvas'), {
         center: {lat: 12.978825, lng: 77.599719},
-        zoom: 8
+        zoom: 14
     });
     google.maps.event.addDomListener(window, "resize", function() {
         var center = map.getCenter();
@@ -17,6 +17,7 @@ function initMap() {
     var infoWindow = new google.maps.InfoWindow();
 
     self.createMapMarker = function(placeData, setMarkerData){
+      console.log("step 5");
         var lat = placeData.geometry.location.lat();  // latitude from the place service
         var lon = placeData.geometry.location.lng();  // longitude from the place service
         var name = placeData.name;   // name of the place from the place service
@@ -53,6 +54,7 @@ function initMap() {
     };
 
     self.googlePlaceSearch = function(place, setGoogleData) {
+      console.log("step 3");
       var bangalore = new google.maps.LatLng(12.978825, 77.599719);
       	var service = new google.maps.places.PlacesService(map);
 

@@ -15,25 +15,33 @@ var Place = function(placeName){
 	this.infoWindow = null;
 };
 
-//To-do: bind search button , search other locations apart from hard coded ones
-//3rd party API for more info
+//To-do: 3rd party API for more info
 var ViewModel = function(mapView){
 	var self = this;
 	this.allLocations = [];
 	this.visibleLocations = ko.observableArray();
 	this.userInput = ko.observable('');
+	this.searchText = ko.observable('');
 
 	initialLocations.forEach(function(place) {
     	self.allLocations.push(new Place(place));
     });
 
+    this.hideEmptyDiv = function(){
+    	$('#locations:empty').hide();
+    }
+
+    //get marker and infowindow data from map view
     this.pinMap = function(place){
+    	console.log("step2 in pinMap");
     	var setGoogleData = function(data) {
+    		console.log("step 4");
     		place.placeServiceData = data;
     		mapView.createMapMarker(place.placeServiceData, setMarkerData);
     	};
 
     	var setMarkerData = function(mData, infoData){
+    		console.log("step 6");
     		place.marker = mData;
     		place.infoWindow = infoData;
     		console.log("marker: ",place.marker, "info:", place.infoWindow);
@@ -42,22 +50,31 @@ var ViewModel = function(mapView){
     	mapView.googlePlaceSearch(place, setGoogleData);
     };
 
-    //get marker and infowindow data from map view
     this.allLocations.forEach(function(place) {
     	self.visibleLocations.push(place);
     	self.pinMap(place);
     });
 
+    this.showInfoWindowContent = function(location) {
+    	console.log("step 7");
+    	location.infoWindow.setContent(location.locationName);
+  		location.infoWindow.open(map, location.marker);
+    }
+
 	this.searchLocation = function(formElement) {
-  		var inputText = $("#search").val();
-  		var placeObj = new Place(inputText);
-  		console.log(placeObj);
-  		self.clearMarkers();
+		self.clearMarkers();
+		console.log(self.searchText(), "step 1");
+  		var placeObj = new Place(self.searchText());
+  		//console.log(placeObj);
   		self.pinMap(placeObj);
+  		//console.log("name:", placeObj.locationName, "info:", placeObj.infoWindow);
+  		self.hideEmptyDiv();
+  		self.showInfoWindowContent(placeObj);
   	};
 
   	//search for locations from the list
   	this.filterMarkers = function(){
+  		$("#locations").show();
   		var searchInput = self.userInput().toLowerCase();
   		self.visibleLocations.removeAll();
 
@@ -72,16 +89,13 @@ var ViewModel = function(mapView){
   		self.visibleLocations().forEach(function(place) {
   			place.marker.setVisible(true);
   		});
-  	};
-
-  	this.setMapOnAll = function(map) {
-	    for (var i = 0; i < markers.length; i++) {
-	      markers[i].setMap(map);
-	    }
+  		self.hideEmptyDiv();
   	};
 
   	this.clearMarkers = function(){
-    	self.setMapOnAll(null);
+  		for (var i = 0; i < markers.length; i++) {
+    		markers[i].setVisible(false);
+    	}
   	};
 
   	this.animateMarker = function(clickedLocation){
@@ -92,8 +106,7 @@ var ViewModel = function(mapView){
   	};
 
   	this.showLocation = function(clickedLocation) {
-  		clickedLocation.infoWindow.setContent(clickedLocation.locationName);
-  		clickedLocation.infoWindow.open(map, clickedLocation.marker);
+  		self.showInfoWindowContent(clickedLocation);
   		self.animateMarker(clickedLocation);
   	};
 };
