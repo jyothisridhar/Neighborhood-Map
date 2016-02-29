@@ -4,7 +4,7 @@ function initMap() {
 
 	  map = new google.maps.Map(document.getElementById('map-canvas'), {
         center: {lat: 12.978825, lng: 77.599719},
-        zoom: 5
+        zoom: 8
     });
     google.maps.event.addDomListener(window, "resize", function() {
         var center = map.getCenter();
@@ -53,9 +53,12 @@ function initMap() {
     };
 
     self.googlePlaceSearch = function(place, setGoogleData) {
+      var bangalore = new google.maps.LatLng(12.978825, 77.599719);
       	var service = new google.maps.places.PlacesService(map);
 
       	var request = {
+            location: bangalore,
+            radius: '5000',
           	query: place.locationName
         };
       	// Actually searches the Google Maps API for location data and runs the callback
@@ -66,6 +69,8 @@ function initMap() {
   	            	setGoogleData(results[0]);
   	        	}
   	        }
+            else
+              console.log("place not found");
       	});
     };
 };
