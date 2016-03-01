@@ -1,11 +1,15 @@
 'use strict';
 
-var initialLocations = ['bowring institue, bangalore',
+var initialLocations = ['Bangalore Palace',
+                        'Bangalore Golf club',
+                        'Alliance Francaise, Bangalore',
+						'Bowring institute, bangalore',
 						'Church street Social, bangalore',
-						'chutney chang, museum road, bangalore',
-						'hard rock cafe, bangalore',
-						'high court of karnataka, bangalore',
-						'm chinnaswamy stadium, bangalore'];
+						'Chutney chang, museum road, bangalore',
+						'Hard rock cafe, bangalore',
+						'High court of karnataka, bangalore',
+						'M Chinnaswamy stadium, bangalore',
+						'Indian Institute of Science, Bangalore'];
 var markers = [];
 
 var Place = function(placeName){

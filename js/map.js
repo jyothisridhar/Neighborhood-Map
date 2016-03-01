@@ -5,7 +5,7 @@ function initMap() {
 	  map = new google.maps.Map(document.getElementById('map-canvas'), {
         center: new google.maps.LatLng(12.978825,77.599719),
         zoom: 14,
-        mapTypeId: google.maps.MapTypeId.ROADMAP
+        mapTypeId: google.maps.MapTypeId.HYBRID
     });
     google.maps.event.addDomListener(window, "resize", function() {
         var center = map.getCenter();
@@ -71,7 +71,9 @@ function initMap() {
           console.log("step 4");
   	        if (status == google.maps.places.PlacesServiceStatus.OK) {
   	        	if(typeof setGoogleData === "function") {
-  	            	setGoogleData(results[0]);
+                for(var i = 0; i < results.length; i++){
+  	            	setGoogleData(results[i]);
+                }
   	        	}
   	        }
             else
