@@ -28,6 +28,7 @@ var ViewModel = function(mapView){
     });
 
     this.hideEmptyDiv = function(){
+    	console.log("step 8");
     	$('#locations:empty').hide();
     }
 
@@ -35,13 +36,13 @@ var ViewModel = function(mapView){
     this.pinMap = function(place){
     	console.log("step2 in pinMap");
     	var setGoogleData = function(data) {
-    		console.log("step 4");
+    		console.log("step 5");
     		place.placeServiceData = data;
     		mapView.createMapMarker(place.placeServiceData, setMarkerData);
     	};
 
     	var setMarkerData = function(mData, infoData){
-    		console.log("step 6");
+    		console.log("step 7");
     		place.marker = mData;
     		place.infoWindow = infoData;
     		console.log("marker: ",place.marker, "info:", place.infoWindow);
@@ -56,7 +57,7 @@ var ViewModel = function(mapView){
     });
 
     this.showInfoWindowContent = function(location) {
-    	console.log("step 7");
+    	console.log("step 9");
     	location.infoWindow.setContent(location.locationName);
   		location.infoWindow.open(map, location.marker);
     }
@@ -69,12 +70,17 @@ var ViewModel = function(mapView){
   		self.pinMap(placeObj);
   		//console.log("name:", placeObj.locationName, "info:", placeObj.infoWindow);
   		self.hideEmptyDiv();
-  		self.showInfoWindowContent(placeObj);
+  		if(placeObj.infoWindow !== null){
+  			self.showInfoWindowContent(placeObj);
+  		}
   	};
 
   	//search for locations from the list
-  	this.filterMarkers = function(){
-  		$("#locations").show();
+    this.filterMarkers = function(){
+    	if(screen.width >= 450) {
+        	$("#locations").show();
+    	}
+  		
   		var searchInput = self.userInput().toLowerCase();
   		self.visibleLocations.removeAll();
 
@@ -115,3 +121,7 @@ function startApp(){
 	var mapView = new initMap();
 	ko.applyBindings(new ViewModel(mapView));
 };
+
+function googleError(){
+	alert("Error! Google maps not loaded. Try again!");
+}
