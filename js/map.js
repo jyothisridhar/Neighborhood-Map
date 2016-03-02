@@ -15,14 +15,13 @@ function initMap() {
 
     var bounds = new google.maps.LatLngBounds();
 
-    var infoWindow = new google.maps.InfoWindow();
+    this.infoWindow = new google.maps.InfoWindow();
 
     self.createMapMarker = function(placeData, setMarkerData){
       console.log("step 6");
         var lat = placeData.geometry.location.lat();  // latitude from the place service
         var lon = placeData.geometry.location.lng();  // longitude from the place service
         var name = placeData.name;   // name of the place from the place service
-        var lastInfoWindow = null;
 
         // marker is an object with additional data about the pin for a single location
         var marker = new google.maps.Marker({
@@ -36,15 +35,15 @@ function initMap() {
 
         google.maps.event.addListener(marker, 'click', function() {
             marker.setAnimation(google.maps.Animation.BOUNCE);
-            infoWindow.setContent(name);
-            infoWindow.open(map, marker);
+            self.infoWindow.setContent(name);
+            self.infoWindow.open(map, marker);
             setTimeout(function() {
                 marker.setAnimation(null)
             }, 1000);
         });
 
         if(typeof setMarkerData === "function") {
-        		setMarkerData(marker, infoWindow);
+        		setMarkerData(marker);
         }
         
         bounds.extend(marker.position);
@@ -64,7 +63,7 @@ function initMap() {
             radius: '5000',
           	query: place.locationName
         };
-        console.log("step 3", request);
+        console.log("step 3");
       	// Actually searches the Google Maps API for location data and runs the callback
       	// function with the search results after each search.
       	service.textSearch(request, function(results, status) {

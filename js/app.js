@@ -7,7 +7,7 @@ var initialLocations = ['Bangalore Palace',
 						'Church street Social, bangalore',
 						'Chutney chang, museum road, bangalore',
 						'Hard rock cafe, bangalore',
-						'High court of karnataka, bangalore',
+						'High court of karnataka',
 						'M Chinnaswamy stadium, bangalore',
 						'Indian Institute of Science, Bangalore'];
 var markers = [];
@@ -16,7 +16,7 @@ var Place = function(placeName){
 	this.locationName = placeName;
 	this.placeServiceData = null;
 	this.marker = null;
-	this.infoWindow = null;
+	//this.infoWindow = null;
 };
 
 //To-do: 3rd party API for more info
@@ -32,24 +32,20 @@ var ViewModel = function(mapView){
     });
 
     this.hideEmptyDiv = function(){
-    	console.log("step 8");
     	$('#locations:empty').hide();
     }
 
     //get marker and infowindow data from map view
     this.pinMap = function(place){
-    	console.log("step2 in pinMap");
     	var setGoogleData = function(data) {
-    		console.log("step 5");
     		place.placeServiceData = data;
     		mapView.createMapMarker(place.placeServiceData, setMarkerData);
     	};
 
-    	var setMarkerData = function(mData, infoData){
-    		console.log("step 7");
+    	var setMarkerData = function(mData){
     		place.marker = mData;
-    		place.infoWindow = infoData;
-    		console.log("marker: ",place.marker, "info:", place.infoWindow);
+    		//place.infoWindow = infoData;
+    		// console.log("marker: ",place.marker, "info:", place.infoWindow);
     	};
 
     	mapView.googlePlaceSearch(place, setGoogleData);
@@ -61,22 +57,18 @@ var ViewModel = function(mapView){
     });
 
     this.showInfoWindowContent = function(location) {
-    	console.log("step 9");
-    	location.infoWindow.setContent(location.locationName);
-  		location.infoWindow.open(map, location.marker);
+    	//console.log("step 9");
+    	mapView.infoWindow.setContent(location.locationName);
+  		mapView.infoWindow.open(map, location.marker);
     }
 
 	this.searchLocation = function(formElement) {
 		self.clearMarkers();
-		console.log(self.searchText(), "step 1");
+		//console.log("step 1");
   		var placeObj = new Place(self.searchText());
-  		//console.log(placeObj);
   		self.pinMap(placeObj);
-  		//console.log("name:", placeObj.locationName, "info:", placeObj.infoWindow);
   		self.hideEmptyDiv();
-  		if(placeObj.infoWindow !== null){
-  			self.showInfoWindowContent(placeObj);
-  		}
+  		self.showInfoWindowContent();
   	};
 
   	//search for locations from the list
