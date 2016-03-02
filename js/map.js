@@ -18,7 +18,8 @@ function initMap() {
     this.infoWindow = new google.maps.InfoWindow();
 
     self.createMapMarker = function(placeData, setMarkerData){
-      console.log("step 6");
+      //console.log("step 6");
+        //var markerSelf = this;
         var lat = placeData.geometry.location.lat();  // latitude from the place service
         var lon = placeData.geometry.location.lng();  // longitude from the place service
         var name = placeData.name;   // name of the place from the place service
@@ -33,6 +34,12 @@ function initMap() {
 
         markers.push(marker);
 
+        // this.openInfoWindow = function(){
+        //     console.log("infoWindow in create marker");
+        //     self.infoWindow.setContent(name);
+        //     self.infoWindow.open(map, marker);
+        // };
+
         google.maps.event.addListener(marker, 'click', function() {
             marker.setAnimation(google.maps.Animation.BOUNCE);
             self.infoWindow.setContent(name);
@@ -45,7 +52,10 @@ function initMap() {
         if(typeof setMarkerData === "function") {
         		setMarkerData(marker);
         }
-        
+
+        self.infoWindow.setContent(name);
+        self.infoWindow.open(map, marker);
+
         bounds.extend(marker.position);
         // fit the map to the new marker
         map.fitBounds(bounds);
@@ -63,17 +73,16 @@ function initMap() {
             radius: '5000',
           	query: place.locationName
         };
-        console.log("step 3");
+
       	// Actually searches the Google Maps API for location data and runs the callback
       	// function with the search results after each search.
       	service.textSearch(request, function(results, status) {
-          console.log("step 4");
   	        if (status == google.maps.places.PlacesServiceStatus.OK) {
-  	        	if(typeof setGoogleData === "function") {
-                for(var i = 0; i < results.length; i++){
-  	            	setGoogleData(results[i]);
-                }
-  	        	}
+  	            if(typeof setGoogleData === "function") {
+                    for(var i = 0; i < results.length; i++){
+  	            	      setGoogleData(results[i]);
+                    }
+  	        	  }
   	        }
             else
               console.log("place not found");

@@ -16,7 +16,6 @@ var Place = function(placeName){
 	this.locationName = placeName;
 	this.placeServiceData = null;
 	this.marker = null;
-	//this.infoWindow = null;
 };
 
 //To-do: 3rd party API for more info
@@ -68,7 +67,6 @@ var ViewModel = function(mapView){
   		var placeObj = new Place(self.searchText());
   		self.pinMap(placeObj);
   		self.hideEmptyDiv();
-  		self.showInfoWindowContent();
   	};
 
   	//search for locations from the list
