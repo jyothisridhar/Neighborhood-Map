@@ -16,6 +16,7 @@ var Place = function(placeName){
 	this.locationName = placeName;
 	this.placeServiceData = null;
 	this.marker = null;
+	this.infoWindowContent = '';
 };
 
 //To-do: 3rd party API for more info
@@ -36,15 +37,18 @@ var ViewModel = function(mapView){
 
     //get marker and infowindow data from map view
     this.pinMap = function(place){
+    	console.log("step 2 in pinMap");
     	var setGoogleData = function(data) {
+    		console.log("step 4 setGoogleData ");
     		place.placeServiceData = data;
     		mapView.createMapMarker(place.placeServiceData, setMarkerData);
     	};
 
-    	var setMarkerData = function(mData){
+    	var setMarkerData = function(mData, infoData){
+    		console.log("step 7 setmarkerData ");
     		place.marker = mData;
-    		//place.infoWindow = infoData;
-    		// console.log("marker: ",place.marker, "info:", place.infoWindow);
+    		place.infoWindowContent = infoData;
+    		console.log("info:", place.infoWindowContent);
     	};
 
     	mapView.googlePlaceSearch(place, setGoogleData);
@@ -52,12 +56,13 @@ var ViewModel = function(mapView){
 
     this.allLocations.forEach(function(place) {
     	self.visibleLocations.push(place);
+    	console.log("step1");
     	self.pinMap(place);
     });
 
     this.showInfoWindowContent = function(location) {
     	//console.log("step 9");
-    	mapView.infoWindow.setContent(location.locationName);
+    	mapView.infoWindow.setContent(location.infoWindowContent);
   		mapView.infoWindow.open(map, location.marker);
     }
 
