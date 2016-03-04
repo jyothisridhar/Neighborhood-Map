@@ -2,7 +2,7 @@ var map;
 function initMap() {
     var self = this;
 
-	  map = new google.maps.Map(document.getElementById('map-canvas'), {
+    map = new google.maps.Map(document.getElementById('map-canvas'), {
         center: new google.maps.LatLng(12.978825,77.599719),
         zoom: 18,
         mapTypeId: google.maps.MapTypeId.HYBRID
@@ -16,15 +16,23 @@ function initMap() {
     var bounds = new google.maps.LatLngBounds();
 
     this.infoWindow = new google.maps.InfoWindow({
-        maxWidth: 200
+        maxWidth: 300
     });
 
     self.createMapMarker = function(placeData, setMarkerData){
-      console.log("step 5 in createMapMarker");
+      // console.log("step 5 in createMapMarker");
 
         var lat = placeData.geometry.location.lat();  // latitude from the place service
         var lon = placeData.geometry.location.lng();  // longitude from the place service
         var name = placeData.name;   // name of the place from the place service
+        var photos = placeData.photos;
+        var photoUrl = '';
+        if(!photos) {
+            photoUrl = 'not found';
+        }
+        else {
+            photoUrl = photos[0].getUrl({'maxWidth': 200, 'maxHeight': 200});
+        }
 
         var client_id = '1JM24EFDXPAAABQRAZQD5MBRRNDONBTF1ZBCX0SDPE2P5XND';
         var client_secret = 'S4AYKN2LZIJEGLKXCSWGQAOOBDVAYGPC2HU11DRPSGRBSFQ0';
@@ -35,22 +43,38 @@ function initMap() {
 
         // marker is an object with additional data about the pin for a single location
         var marker = new google.maps.Marker({
-  	        map: map,
-  	        position: placeData.geometry.location,
-  	        title: name,
-  	        animation: google.maps.Animation.DROP,
+            map: map,
+            position: placeData.geometry.location,
+            title: name,
+            animation: google.maps.Animation.DROP,
         });
 
         markers.push(marker);
 
         //get four square data
         $.getJSON(fourSquareUrl, function(data){
-          console.log("step 6 in get json createMapMarker");
+          
             var venueDetails = data.response.venues[0];
-            infoContentStr = '<div><p><b>' + name +'</b></p><p>' + '<a href="' + venueDetails.url +'">' + venueDetails.url+ '</a></p>' + 
-                             '<p>' + venueDetails.location.formattedAddress + '</p>' +
-                             '<p>' +venueDetails.photos + '</p>' +
-                             '</div>';
+            console.log("step 6 in get json createMapMarker", venueDetails);
+            if(!venueDetails) {
+                infoContentStr = name;
+            }
+            else {
+                if(photoUrl === 'not found') {
+                    infoContentStr = '<div><p><b>' + name +'</b></p><p>' + '<a href="' + venueDetails.url +'">' + venueDetails.url+ '</a></p>' + 
+                                     '<p>' + venueDetails.location.formattedAddress + '</p>' +
+                                     '<p><i>Photo not found</i></p>' +
+                                     '</div>';
+                }
+                else {
+                    infoContentStr = '<div><p><b>' + name +'</b></p><p>' + '<a href="' + venueDetails.url +'">' + venueDetails.url+ '</a></p>' + 
+                                     '<p>' + venueDetails.location.formattedAddress + '</p>' +
+                                     '<img src="' + photoUrl + '">' +
+                                     '</div>';
+                }
+            }
+        }).error(function(e) {
+            alert("Foursquare could not be contacted now! Try again later.");
         });
 
         google.maps.event.addListener(marker, 'click', function() {
@@ -58,12 +82,12 @@ function initMap() {
             self.infoWindow.setContent(infoContentStr);
             self.infoWindow.open(map, marker);
             setTimeout(function() {
-                marker.setAnimation(null)
+                marker.setAnimation(null);
             }, 1000);
         });
 
         if(typeof setMarkerData === "function") {
-        		setMarkerData(marker, name);
+            setMarkerData(marker, name);
         }
 
         self.infoWindow.setContent(name);
@@ -79,26 +103,26 @@ function initMap() {
     self.googlePlaceSearch = function(place, setGoogleData) {
         console.log("step3 in placesearch");
         var bangalore = new google.maps.LatLng(12.978825, 77.599719);
-      	var service = new google.maps.places.PlacesService(map);
+        var service = new google.maps.places.PlacesService(map);
 
-      	var request = {
+        var request = {
             location: bangalore,
             radius: '5000',
-          	query: place.locationName
+            query: place.locationName
         };
 
-      	// Actually searches the Google Maps API for location data and runs the callback
-      	// function with the search results after each search.
-      	service.textSearch(request, function(results, status) {
-  	        if (status == google.maps.places.PlacesServiceStatus.OK) {
-  	            if(typeof setGoogleData === "function") {
+        // Actually searches the Google Maps API for location data and runs the callback
+        // function with the search results after each search.
+        service.textSearch(request, function(results, status) {
+            if (status == google.maps.places.PlacesServiceStatus.OK) {
+                if(typeof setGoogleData === "function") {
                     for(var i = 0; i < results.length; i++){
-  	            	      setGoogleData(results[i]);
+                        setGoogleData(results[i]);
                     }
-  	        	  }
-  	        }
+                }
+            }
             else
               console.log("place not found");
-      	});
+        });
     };
-};
+}
