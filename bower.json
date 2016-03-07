@@ -1,0 +1,8 @@
+{
+  "name": "neighborhood-map",
+  "version": "0.0.0",
+  "dependencies": {
+    "knockout": "~3.4.0",
+    "jquery": "~2.0.0",
+  }
+}
