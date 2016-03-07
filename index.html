@@ -3,13 +3,13 @@
 	<head>
 		<meta name="viewport"  charset="UTF-8" content="width=device-width, initial-scale=1.0">
 		<link rel="stylesheet" type="text/css" href="css/style.css">
-		<title>Neighborhood map</title>
+		<title>Jo's Neighborhood</title>
 	</head>
 	<body>
 		<div id="map-canvas"></div>
 		<div class="location-search">
 			<form id="searchbox" data-bind="submit: searchLocation">
-				<input id="search" type="text" data-bind="textInput: userInput, event: {keyup: filterMarkers}, value: searchText" placeholder="I'm looking for..">
+				<input id="search" type="text" data-bind="textInput: userInput, event: {keyup: filterMarkers}, value: searchText" placeholder="Look for.. any location..">
 				<input id="submit" type="submit" value="Search">
 			</form>			
 		</div>

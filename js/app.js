@@ -1,125 +1,132 @@
 "use strict";
 
+//Default locations when page is loaded
 var initialLocations = ['Bangalore Palace',
                         'Bangalore Golf club',
-                        'Alliance Francaise, Bangalore',
-                        'Bowring institute, bangalore',
+                        'Smally\'s resto cafe',
+                        'B Flat, bangalore',
                         'Church street Social, bangalore',
                         'Chutney chang, museum road, bangalore',
                         'Hard rock cafe, bangalore',
-                        'High court of karnataka',
-                        'M Chinnaswamy stadium, bangalore',
-                        'Indian Institute of Science, Bangalore'];
+                        'The humming Tree, Bangalore',
+                        'Toit, bangalore',
+                        'Windmills craftworks'];
+
+//Array of markers
 var markers = [];
 
+//Place constructor for each location
 var Place = function(placeName){
-  this.locationName = placeName;
-  this.placeServiceData = null;
-  this.marker = null;
-  this.infoWindowContent = '';
+    this.locationName = placeName;
+    this.placeServiceData = null;
+    this.marker = null;
+    this.infoWindowContent = '';
 };
 
+/**
+  * @desc Knockout viewmodel handling operations on UI
+  * @param mapView - map object
+*/
 var ViewModel = function(mapView){
-  var self = this;
-  this.allLocations = [];
-  this.visibleLocations = ko.observableArray();
-  this.userInput = ko.observable('');
-  this.searchText = ko.observable('');
+    var self = this;
+    this.allLocations = [];
+    this.visibleLocations = ko.observableArray();
+    this.userInput = ko.observable('');
+    this.searchText = ko.observable('');
 
-  initialLocations.forEach(function(place) {
-      self.allLocations.push(new Place(place));
+    initialLocations.forEach(function(place) {
+        self.allLocations.push(new Place(place));
     });
 
     this.hideEmptyDiv = function(){
-      $('#locations:empty').hide();
+        $('#locations:empty').hide();
     };
 
     //get marker and infowindow data from map view
     this.pinMap = function(place){
-      // console.log("step 2 in pinMap");
-      var setGoogleData = function(data) {
-        // console.log("step 4 setGoogleData ");
-        place.placeServiceData = data;
-        mapView.createMapMarker(place.placeServiceData, setMarkerData);
-      };
+        var setGoogleData = function(data) {
+            place.placeServiceData = data;
+            mapView.createMapMarker(place.placeServiceData, setMarkerData);
+        };
 
-      var setMarkerData = function(mData, infoData){
-        // console.log("step 7 setmarkerData ");
-        place.marker = mData;
-        place.infoWindowContent = infoData;
-        // console.log("info:", place.infoWindowContent);
-      };
+        var setMarkerData = function(mData, infoData){
+            place.marker = mData;
+            place.infoWindowContent = infoData;
+        };
 
-      mapView.googlePlaceSearch(place, setGoogleData);
+        mapView.googlePlaceSearch(place, setGoogleData);
     };
 
+    //Generate map markers for each location in the array
     this.allLocations.forEach(function(place) {
-      self.visibleLocations.push(place);
-      // console.log("step1");
-      self.pinMap(place);
+        self.visibleLocations.push(place);
+        self.pinMap(place);
     });
 
     this.showInfoWindowContent = function(location) {
-      //console.log("step 9");
-      mapView.infoWindow.setContent(location.infoWindowContent);
-      mapView.infoWindow.open(map, location.marker);
+        mapView.infoWindow.setContent(location.infoWindowContent);
+        mapView.infoWindow.open(map, location.marker);
     };
 
-  this.searchLocation = function(formElement) {
-    self.clearMarkers();
-    //console.log("step 1");
-      var placeObj = new Place(self.searchText());
-      self.pinMap(placeObj);
-      self.hideEmptyDiv();
+    //Search location and create markers for locations not in the list
+    this.searchLocation = function(formElement) {
+        self.clearMarkers();
+        var placeObj = new Place(self.searchText());
+        self.pinMap(placeObj);
+        self.hideEmptyDiv();  //hide div if list is empty
     };
 
-    //search for locations from the list
+    //Search for locations from the list
     this.filterMarkers = function(){
-      if(screen.width >= 450) {
-          $("#locations").show();
-      }
-      
-      var searchInput = self.userInput().toLowerCase();
-      self.visibleLocations.removeAll();
-
-      self.allLocations.forEach(function(place) {
-        place.marker.setVisible(false);
-
-        if(place.locationName.toLowerCase().indexOf(searchInput) !== -1){
-          self.visibleLocations.push(place);
+        if(screen.width >= 450) {
+            $("#locations").show();
         }
-      });
-      
-      self.visibleLocations().forEach(function(place) {
-        place.marker.setVisible(true);
-      });
-      self.hideEmptyDiv();
+
+        var searchInput = self.userInput().toLowerCase();
+        self.visibleLocations.removeAll();
+
+        self.allLocations.forEach(function(place) {
+            place.marker.setVisible(false);
+
+            if(place.locationName.toLowerCase().indexOf(searchInput) !== -1){
+                self.visibleLocations.push(place);
+            }
+        });
+
+        self.visibleLocations().forEach(function(place) {
+            place.marker.setVisible(true);
+        });
+        self.hideEmptyDiv();
     };
 
     this.clearMarkers = function(){
-      for (var i = 0; i < markers.length; i++) {
-        markers[i].setVisible(false);
-      }
+        for (var i = 0; i < markers.length; i++) {
+            markers[i].setVisible(false);
+        }
     };
 
     this.animateMarker = function(clickedLocation){
-      clickedLocation.marker.setAnimation(google.maps.Animation.BOUNCE);
-      setTimeout(function() {
-          clickedLocation.marker.setAnimation(null);
-      }, 1000);
+        clickedLocation.marker.setAnimation(google.maps.Animation.BOUNCE);
+        //stop animation after a second
+        setTimeout(function() {
+            clickedLocation.marker.setAnimation(null);
+        }, 1000);
     };
 
+    //Show marker and info window for location selected from the list
     this.showLocation = function(clickedLocation) {
-      self.showInfoWindowContent(clickedLocation);
-      self.animateMarker(clickedLocation);
+        self.showInfoWindowContent(clickedLocation);
+        self.animateMarker(clickedLocation);
     };
 };
 
+//startApp is called when page is loaded
 function startApp(){
-  var mapView = new initMap();
-  ko.applyBindings(new ViewModel(mapView));
+    var mapView = new initMap();
+    //Activates knockout.js
+    ko.applyBindings(new ViewModel(mapView));
 }
 
 function googleError(){
-  alert("Error! Google maps not loaded. Try again!");
+    alert("Error! Google maps not loaded. Try again!");
 }
