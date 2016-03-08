@@ -1,9 +1,19 @@
+"use strict";
+
 //Global map variable
 var map;
 
 //Create map view generate custom google map
 function initMap() {
     var self = this;
+
+    // Sets the boundaries of the map based on pin locations
+    var bounds = new google.maps.LatLngBounds();
+
+    // Instance of infowindow to display more info about a location.
+    this.infoWindow = new google.maps.InfoWindow({
+        maxWidth: 300
+    });
 
     map = new google.maps.Map(document.getElementById('map-canvas'), {
         center: new google.maps.LatLng(12.978825,77.599719),
@@ -15,15 +25,8 @@ function initMap() {
     google.maps.event.addDomListener(window, "resize", function() {
         var center = map.getCenter();
         google.maps.event.trigger(map, "resize");
+        map.fitBounds(bounds);
         map.setCenter(center);
-    });
-
-    // Sets the boundaries of the map based on pin locations
-    var bounds = new google.maps.LatLngBounds();
-
-    // Instance of infowindow to display more info about a location.
-    this.infoWindow = new google.maps.InfoWindow({
-        maxWidth: 300
     });
 
     /**
@@ -57,11 +60,12 @@ function initMap() {
         var infoContentStr = '';     //Formatted string for info window content
 
         // marker is an object with additional data about the pin for a single location
+        // var markerIcon = 'https://developers.google.com/maps/documentation/javascript/examples/full/images/arrow.png';
         var marker = new google.maps.Marker({
             map: map,
             position: placeData.geometry.location,
             title: name,
-            animation: google.maps.Animation.DROP,
+            animation: google.maps.Animation.DROP
         });
 
         //Add marker into markers array
@@ -77,13 +81,13 @@ function initMap() {
             }
             else {
                 if(photoUrl === 'not found') {
-                    infoContentStr = '<div><p><b>' + name +'</b></p><p>' + '<a href="' + venueDetails.url +'">' + venueDetails.url+ '</a></p>' + 
+                    infoContentStr = '<div><p><b>' + name +'</b></p><p>' + '<a href="' + venueDetails.url +'" target="_blank">' + venueDetails.url+ '</a></p>' + 
                                      '<p>' + venueDetails.location.formattedAddress + '</p>' +
                                      '<p><i>Photo not found</i></p>' +
                                      '</div>';
                 }
                 else {
-                    infoContentStr = '<div><p><b>' + name +'</b></p><p>' + '<a href="' + venueDetails.url +'">' + venueDetails.url+ '</a></p>' + 
+                    infoContentStr = '<div><p><b>' + name +'</b></p><p>' + '<a href="' + venueDetails.url +'" target="_blank">' + venueDetails.url+ '</a></p>' + 
                                      '<p>' + venueDetails.location.formattedAddress + '</p>' +
                                      '<img src="' + photoUrl + '">' +
                                      '</div>';
@@ -96,6 +100,7 @@ function initMap() {
 
         // Listen for marker click
         google.maps.event.addListener(marker, 'click', function() {
+            map.setCenter(marker.getPosition());
             // Bounce marker on click
             marker.setAnimation(google.maps.Animation.BOUNCE);
 
@@ -104,7 +109,7 @@ function initMap() {
             self.infoWindow.open(map, marker);
             setTimeout(function() {
                 marker.setAnimation(null);
-            }, 1000);
+            }, 1400);
         });
 
         // Callback function to pass marker data to view model
@@ -150,7 +155,7 @@ function initMap() {
                 }
             }
             else
-              console.log("place not found");
+              alert("Place not found!");
         });
     };
 }

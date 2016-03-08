@@ -39,7 +39,7 @@ var ViewModel = function(mapView){
     });
 
     this.hideEmptyDiv = function(){
-        $('#locations:empty').hide();
+        $('.locations:empty').hide();
     };
 
     //get marker and infowindow data from map view
@@ -78,9 +78,9 @@ var ViewModel = function(mapView){
 
     //Search for locations from the list
     this.filterMarkers = function(){
-        if(screen.width >= 450) {
-            $("#locations").show();
-        }
+        // if(screen.width >= 450) {
+        //     $(".locations").show();
+        // }
 
         var searchInput = self.userInput().toLowerCase();
         self.visibleLocations.removeAll();
@@ -107,10 +107,10 @@ var ViewModel = function(mapView){
 
     this.animateMarker = function(clickedLocation){
         clickedLocation.marker.setAnimation(google.maps.Animation.BOUNCE);
-        //stop animation after a second
+        //stop animation after 2 bounces
         setTimeout(function() {
             clickedLocation.marker.setAnimation(null);
-        }, 1000);
+        }, 1400);
     };
 
     //Show marker and info window for location selected from the list
