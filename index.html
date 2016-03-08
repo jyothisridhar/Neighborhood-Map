@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<link rel="stylesheet" href="css/style.css">
+		<title>Jo's Neighborhood</title>
+	</head>
+	<body>
+		<div id="map-canvas"></div>
+		<div class="location-search">
+			<form class="searchbox" data-bind="submit: searchLocation">
+				<input class="search" type="text" data-bind="textInput: userInput, event: {keyup: filterMarkers}, value: searchText" placeholder="Look for.. any location..">
+				<input class="submit" type="submit" value="Search">
+			</form>			
+		</div>
+		<div class="location-list">
+			<button class="nav-btn">Toggle List</button>
+			<div class="locations" data-bind="foreach: visibleLocations">
+				<p class="loc" data-bind="text: locationName, click: $parent.showLocation"></p>
+				<hr>
+			</div>
+		</div>
+		<script src="bower_components\jquery\dist\jquery.min.js"></script>
+		<script src="bower_components\knockout\dist\knockout.js"></script>
+		<script src="js/app.js"></script>
+		<script src="js/map.js"></script>
+		<script>
+			$(".nav-btn").click(function() {
+				$(".location-list").ToggleList();
+			});
+			$.fn.ToggleList = function(){
+				return this.each(function() {
+					if(parseInt($(this).css('right')) < 0) {
+						$(this).animate({'right':'0px'}, 1000);
+					}
+					else {
+						if(screen.width <= 450){
+							$(this).animate({'right':'-250px'}, 1000);
+						}
+						else {
+							$(this).animate({'right':'-350px'}, 1000);
+						}
+					}
+				});
+			};
+		</script>
+		<script async src="https://maps.googleapis.com/maps/api/js?libraries=places&callback=startApp" onerror="googleError()"></script>
+	</body>
+</html>
