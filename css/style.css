@@ -79,21 +79,23 @@ body{
 
 .location-list {
 	position: fixed;
-	width: 100%;
+	width: 400px;
 	height: 500px;
 	right: 0px;
 }
-/*.nav-btn {
+
+/* Toggle list button */
+.nav-btn {
 	background:#5681b4;
 	border-radius: 10px 0px 0px 10px;
 	position: absolute;
 	top: 140px;
-	width: 40px;
+	width: 45px;
 	height: 70px;
-	right: 365px;
+	right: 366px;
 	display: block;
 	cursor: pointer;
-}*/
+}
 
 /* List view of locations */
 .locations {
@@ -135,10 +137,18 @@ body{
 }
 
 @media (max-width: 450px){
+	.location-list{
+		top: 35px;
+		width: 300px;
+		height: 300px;
+		overflow: scroll;
+	}
 	.locations {
-		display: none;
-/*		width: 200px;
-		height: 200px;
-		overflow: scroll;*/
+		width: 250px;
+		height: 300px;
+		overflow: scroll;
+	}
+	.nav-btn {
+		right: 265px;
 	}
 }
