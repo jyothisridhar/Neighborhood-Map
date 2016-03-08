@@ -38,10 +38,6 @@ var ViewModel = function(mapView){
         self.allLocations.push(new Place(place));
     });
 
-    this.hideEmptyDiv = function(){
-        $('.locations:empty').hide();
-    };
-
     //get marker and infowindow data from map view
     this.pinMap = function(place){
         var setGoogleData = function(data) {
@@ -73,15 +69,10 @@ var ViewModel = function(mapView){
         self.clearMarkers();
         var placeObj = new Place(self.searchText());
         self.pinMap(placeObj);
-        self.hideEmptyDiv();  //hide div if list is empty
     };
 
     //Search for locations from the list
     this.filterMarkers = function(){
-        // if(screen.width >= 450) {
-        //     $(".locations").show();
-        // }
-
         var searchInput = self.userInput().toLowerCase();
         self.visibleLocations.removeAll();
 
@@ -96,7 +87,6 @@ var ViewModel = function(mapView){
         self.visibleLocations().forEach(function(place) {
             place.marker.setVisible(true);
         });
-        self.hideEmptyDiv();
     };
 
     this.clearMarkers = function(){
