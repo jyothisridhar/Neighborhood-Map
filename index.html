@@ -12,7 +12,7 @@
 			<form class="searchbox" data-bind="submit: searchLocation">
 				<input class="search" type="text" data-bind="textInput: userInput, event: {keyup: filterMarkers}, value: searchText" placeholder="Look for.. any location..">
 				<input class="submit" type="submit" value="Search">
-			</form>			
+			</form>
 		</div>
 		<div class="location-list">
 			<button class="nav-btn">Toggle List</button>
@@ -45,6 +45,6 @@
 				});
 			};
 		</script>
-		<script async src="https://maps.googleapis.com/maps/api/js?libraries=places&callback=startApp" onerror="googleError()"></script>
+		<script async src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAS6JKFKAbyh6aP4z9FIwiEzK4CjVZnFC4&callback=initMap" async defer></script>
 	</body>
 </html>

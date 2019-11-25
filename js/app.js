@@ -111,7 +111,7 @@ var ViewModel = function(mapView){
 };
 
 //startApp is called when page is loaded
-function startApp(){
+function initMap(){
     var mapView = new initMap();
     //Activates knockout.js
     ko.applyBindings(new ViewModel(mapView));
